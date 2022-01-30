@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "Bugza_Backend"
+version = "0.1.0"
+description = "Backend system of Bugza - A bug tracking system"
+authors = ["Owusu Kelvin Clark <kelvinclark2k77@gmail.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+fastapi = "^0.73.0"
+SQLAlchemy = "^1.4.31"
+strawberry-graphql = {extras = ["fastapi"], version = "^0.95.1"}
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2.5"
+pytest-asyncio = "^0.17.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
