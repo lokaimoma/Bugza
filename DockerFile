@@ -1,0 +1,10 @@
+FROM python:3.9
+WORKDIR /app
+RUN pip3 install poetry
+COPY poetry.lock .
+COPY pyproject.toml .
+RUN poetry config virtualenvs.create false --local
+RUN poetry install
+COPY . .
+EXPOSE 8000
+CMD ["python3", "./app.py"]
