@@ -10,12 +10,9 @@ from sqlalchemy.orm import sessionmaker, Session
 
 from app.utils.constants import *
 
-mode = os.environ[MODE_KEY]
-if mode != PROD_MODE or mode != DEV_MODE:
-    raise ValueError(f"The mode variable must hold a value of either {PROD_MODE} or {DEV_MODE}")
 
-SYNC_DATABASE_URL = os.environ[DEV_SYNC_DATABASE_KEY] if mode == DEV_MODE else os.environ[PROD_SYNC_DATABASE_KEY]
-ASYNC_DATABASE_URL = os.environ[DEV_ASYNC_DATABASE_KEY] if mode == DEV_MODE else os.environ[PROD_ASYNC_DATABASE_KEY]
+SYNC_DATABASE_URL = os.environ[SYNC_DATABASE_URL_KEY]
+ASYNC_DATABASE_URL = os.environ[ASYNC_DATABASE_URL_KEY]
 
 SQLALCHEMY_BASE = declarative.declarative_base()
 __sync_engine: Optional[MockConnection]

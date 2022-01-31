@@ -8,11 +8,10 @@ from app.data.enum.roles import Role
 class User(SQLALCHEMY_BASE):
     __tablename__ = "users"
     id: int = sa.Column(sa.BIGINT, primary_key=True, autoincrement=True)
-    username: str = sa.Column(sa.String, nullable=False, unique=True)
-    email: str = sa.Column(sa.String, nullable=False, unique=True)
+    username: str = sa.Column(sa.String(length=255), nullable=False, unique=True)
+    email: str = sa.Column(sa.String(length=255), nullable=False, unique=True)
     password: str = sa.Column(sa.TEXT, nullable=False)
-    role: Role = sa.Column(sa.Enum(Role.ADMIN, Role.SYSTEM_USER, Role.DEVELOPER, Role.TESTER),
-                           server_default=Role.TESTER, default=Role.TESTER)
+    role: Role = sa.Column(sa.Enum(Role), default=Role.TESTER)
 
     def __init__(self, username: str, email: str, password: str, role: Role = Role.TESTER):
         self.username = username
