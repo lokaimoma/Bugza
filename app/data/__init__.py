@@ -15,10 +15,10 @@ SYNC_DATABASE_URL = os.environ[SYNC_DATABASE_URL_KEY]
 ASYNC_DATABASE_URL = os.environ[ASYNC_DATABASE_URL_KEY]
 
 SQLALCHEMY_BASE = declarative.declarative_base()
-__sync_engine: Optional[MockConnection]
-__async_engine: Optional[AsyncEngine]
-__sync_session_maker: Optional[sessionmaker]
-__async_session_maker: Optional[sessionmaker]
+__sync_engine: Optional[MockConnection] = None
+__async_engine: Optional[AsyncEngine] = None
+__sync_session_maker: Optional[sessionmaker] = None
+__async_session_maker: Optional[sessionmaker] = None
 
 
 def __create_sync_engine():

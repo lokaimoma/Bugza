@@ -11,7 +11,7 @@ from app.data.schema.pydantic.user import UserOut
 from app.data.usecases.getters.get_user import get_user_by_username_id
 from app.utils.security.jwt import get_token_data
 
-oauth2_schema = OAuth2PasswordBearer(tokenUrl="/auth/token")
+oauth2_schema = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
 
 def get_current_user(token: str = Depends(oauth2_schema), session: Session = Depends(get_sync_session)) -> UserOut:
