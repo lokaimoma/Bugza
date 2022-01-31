@@ -16,6 +16,7 @@ aiomysql = "^0.0.22"
 passlib = "^1.7.4"
 python-multipart = "^0.0.5"
 python-jose = {extras = ["cryptography"], version = "^3.3.0"}
+uvicorn = {extras = ["standard"], version = "^0.17.1"}
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"
