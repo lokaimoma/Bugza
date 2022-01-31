@@ -22,7 +22,7 @@ class UserOut(BaseModel):
     email: str
     role: Role
     token: Optional[str]
-    toke_type: Optional[str]
+    token_type: Optional[str]
 
     class Config:
         orm_mode = True
