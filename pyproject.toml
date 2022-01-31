@@ -13,6 +13,7 @@ strawberry-graphql = {extras = ["fastapi"], version = "^0.95.1"}
 python-dotenv = "^0.19.2"
 alembic = "^1.7.5"
 aiomysql = "^0.0.22"
+passlib = "^1.7.4"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"
