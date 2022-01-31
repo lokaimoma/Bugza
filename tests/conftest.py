@@ -2,6 +2,9 @@
 import asyncio
 
 import pytest
+from httpx import AsyncClient
+
+from app.utils.constants import TEST_BASE_URL
 from tests.database import init_tables
 from app import create_app
 from app.data import get_async_session, get_sync_session
@@ -23,3 +26,12 @@ def app():
     app.dependency_overrides[get_sync_session] = get_sync_session_
     yield app
 
+
+@pytest.fixture
+@pytest.mark.anyio
+async def test_user(app) -> dict:
+    async with AsyncClient(app=app, base_url=TEST_BASE_URL) as ac:
+        ac: AsyncClient
+        form_data = {"username": "BetaTester", "password": "synergy", "email": "hello@hello.com"}
+        response = await ac.post(url="/auth/signUp", data=form_data)
+        return response.json()
