@@ -1,0 +1,29 @@
+name: Bugza Tests Runner
+on:
+  push:
+    branches:
+      - "main"
+      - "*"
+
+jobs:
+  run_tests:
+    runs-on: ubuntu-latest
+    env:
+      SECRET_KEY: "123"
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Setup Poetry
+        uses: abatilo/actions-poetry@v2.0.0
+        with:
+          poetry-version: "1.1.12"
+      - name: Install dependencies
+        run: poetry install --no-interaction --no-root
+      - name: Run tests
+        run: poetry run pytest
+
+
+
