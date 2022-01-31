@@ -30,8 +30,8 @@ def login_user(form_data: OAuth2PasswordRequestForm = Depends(), session: Sessio
 
 
 @router.post(path="/signUp", status_code=HTTP_201_CREATED, response_model=UserOut)
-def sign_up_test_user(username: str = Form(...), password: str = Form(...), email: str = Form(...),
-                      session: Session = Depends(get_sync_session)):
+async def sign_up_test_user(username: str = Form(...), password: str = Form(...), email: str = Form(...),
+                            session: Session = Depends(get_sync_session)):
     try:
         user = insert_user(session=session, username=username, email=email, password=password, role=Role.TESTER)
         token_data = TokenData(username=user.username, user_id=user.id).dict()

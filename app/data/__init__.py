@@ -1,6 +1,6 @@
 # Created by Kelvin_Clark on 1/30/2022, 9:52 PM
 import os
-from typing import Optional, Generator
+from typing import Optional, Generator, AsyncGenerator
 
 from sqlalchemy import create_engine
 from sqlalchemy.engine.mock import MockConnection
@@ -56,7 +56,7 @@ def get_sync_session() -> Generator[Session, None, None]:
         session.close()
 
 
-async def get_async_session() -> Generator[AsyncSession, None, None]:
+async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
     global __async_engine
     global __async_session_maker
     if __async_engine is None:
