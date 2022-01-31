@@ -8,7 +8,7 @@ from app.data.enum.ticket_state import TicketState
 
 class Ticket(SQLALCHEMY_BASE):
     __tablename__ = "tickets"
-    id: int = sa.Column(sa.BIGINT, primary_key=True, autoincrement=True)
+    id: int = sa.Column(sa.BIGINT().with_variant(sa.Integer, "sqlite"), primary_key=True, autoincrement=True)
     project_id: int = sa.Column(sa.BIGINT, sa.ForeignKey("projects.id", ondelete="CASCADE", onupdate="CASCADE"))
     opener_id: int = sa.Column(sa.BIGINT, sa.ForeignKey("users.id", onupdate="CASCADE", ondelete="CASCADE"))
     title: str = sa.Column(sa.String(255), nullable=False)

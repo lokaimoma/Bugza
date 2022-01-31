@@ -7,7 +7,8 @@ from app.data.enum.roles import Role
 
 class User(SQLALCHEMY_BASE):
     __tablename__ = "users"
-    id: int = sa.Column(sa.BIGINT, primary_key=True, autoincrement=True)
+    id: int = sa.Column(sa.BIGINT().with_variant(type_=sa.Integer, dialect_name="sqlite"), primary_key=True,
+                        autoincrement=True)
     username: str = sa.Column(sa.String(length=255), nullable=False, unique=True)
     email: str = sa.Column(sa.String(length=255), nullable=False, unique=True)
     password: str = sa.Column(sa.TEXT, nullable=False)

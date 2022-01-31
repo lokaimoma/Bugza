@@ -6,7 +6,7 @@ from app.data import SQLALCHEMY_BASE
 
 class Project(SQLALCHEMY_BASE):
     __tablename__ = "projects"
-    id: int = sa.Column(sa.BIGINT, primary_key=True, autoincrement=True)
+    id: int = sa.Column(sa.BIGINT().with_variant(sa.Integer, "sqlite"), primary_key=True, autoincrement=True)
     name: str = sa.Column(sa.String(255), nullable=False)
     description: str = sa.Column(sa.TEXT)
 

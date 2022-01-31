@@ -6,7 +6,7 @@ from app.data import SQLALCHEMY_BASE
 
 class Comment(SQLALCHEMY_BASE):
     __tablename__ = "comments"
-    id: int = sa.Column(sa.BIGINT, primary_key=True, autoincrement=True)
+    id: int = sa.Column(sa.BIGINT().with_variant(sa.Integer, "sqlite"), primary_key=True, autoincrement=True)
     user_id: int = sa.Column(sa.BIGINT, sa.ForeignKey("users.id", ondelete="CASCADE", onupdate="CASCADE"),
                              nullable=False)
     ticket_id: int = sa.Column(sa.BIGINT, sa.ForeignKey("tickets.id", onupdate="CASCADE", ondelete="CASCADE"),
