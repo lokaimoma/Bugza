@@ -10,6 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       SECRET_KEY: "123"
+      SYNC_DATABASE_URL: "sqlite:///./dev.db"
+      ASYNC_DATABASE_URL: "sqlite+aiosqlite:///./dev.db"
     steps:
       - uses: actions/checkout@v2
       - name: Setup Python
