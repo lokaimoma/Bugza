@@ -1,9 +1,10 @@
 # Created by Kelvin_Clark on 1/31/2022, 12:16 PM
 import os
 from datetime import datetime, timedelta
-from typing import Any, Union
+from typing import Union
 
 from jose import jwt, JWTError
+
 from app.utils.constants import SECRET_KEY_ENV_KEY
 
 ALGORITHM = "HS256"
@@ -19,7 +20,7 @@ def create_access_token(data: dict) -> str:
     return token
 
 
-def get_token_data(token: str) -> Union[Any, bool]:
+def get_token_data(token: str) -> Union[dict, bool]:
     """
     Returns the content of a JWT string if the token is valid
     otherwise returns a bool of value False.
@@ -35,7 +36,7 @@ def get_token_data(token: str) -> Union[Any, bool]:
         return False
 
 
-def __verify_token(token: str) -> Any:
+def __verify_token(token: str) -> dict:
     payload = jwt.decode(token=token, key=SECRET_KEY, algorithms=[ALGORITHM])
     data = payload.get("sub")
     if data is None:
