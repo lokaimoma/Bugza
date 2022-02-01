@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 from starlette import status
 
 from app.data import get_sync_session
+from app.data.enum.roles import Role
 from app.data.schema.pydantic.user import UserOut
 from app.data.usecases.getters.get_user import get_user_by_username_id
 from app.utils.security.jwt import get_token_data
@@ -33,3 +34,12 @@ def get_current_user(token: str = Depends(oauth2_schema), session: Session = Dep
         return user
     except ValueError:
         raise credentials_exception
+
+
+def get_admin_system_user(current_user: UserOut = Depends(get_current_user)) -> UserOut:
+    if current_user.role != Role.ADMIN or current_user.role != Role.SYSTEM_USER:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Account not an admin or system user account"
+        )
+    return current_user
