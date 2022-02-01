@@ -4,7 +4,11 @@ import asyncio
 import pytest
 from httpx import AsyncClient
 
+from app.data.entities.user import User
+from app.data.enum.roles import Role
+from app.data.schema.pydantic.user import UserOut
 from app.utils.constants import TEST_BASE_URL
+from app.utils.security.jwt import create_access_token
 from tests.database import init_tables
 from app import create_app
 from app.data import get_async_session, get_sync_session
@@ -35,3 +39,17 @@ async def test_user(app) -> dict:
         form_data = {"username": "BetaTester", "password": "synergy", "email": "hello@hello.com"}
         response = await ac.post(url="/auth/signUp", data=form_data)
         return response.json()
+
+
+@pytest.fixture
+def admin_user() -> UserOut:
+    user = User(username="admin", email="admin@bugza.com", password="", role=Role.ADMIN)
+    session = next(get_sync_session_())
+    session.add(user)
+    session.commit()
+    session.refresh(user)
+    session.close()
+    token = create_access_token(data={"username": user.username, "user_id": user.id})
+    user_out = UserOut(username=user.username, role=user.role, email=user.email, id=user.id,
+                       token=token, token_type="Bearer")
+    return user_out

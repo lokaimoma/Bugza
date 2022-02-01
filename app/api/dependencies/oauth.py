@@ -37,9 +37,9 @@ def get_current_user(token: str = Depends(oauth2_schema), session: Session = Dep
 
 
 def get_admin_system_user(current_user: UserOut = Depends(get_current_user)) -> UserOut:
-    if current_user.role != Role.ADMIN or current_user.role != Role.SYSTEM_USER:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Account not an admin or system user account"
-        )
-    return current_user
+    if (current_user.role == Role.ADMIN) or (current_user.role == Role.SYSTEM_USER):
+        return current_user
+    raise HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Account not an admin or system user account"
+    )
