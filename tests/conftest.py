@@ -5,8 +5,11 @@ import pytest
 from httpx import AsyncClient
 
 from app.data.entities.project import Project
+from app.data.entities.ticket import Ticket
 from app.data.entities.user import User
 from app.data.enum.roles import Role
+from app.data.enum.ticket_state import TicketState
+from app.data.enum.ticket_type import TicketType
 from app.data.schema.pydantic.user import UserOut
 from app.utils.constants import TEST_BASE_URL
 from app.utils.security.jwt import create_access_token
@@ -65,3 +68,16 @@ def project() -> Project:
     session.refresh(project)
     session.close()
     return project
+
+
+@pytest.fixture
+def ticket_user(project, test_user) -> tuple[Ticket, dict]:
+    test_user: dict
+    ticket = Ticket(project_id=project.id, creator_id=test_user["id"], title="sample title",
+                    description="sample description", ticket_state=TicketState.OPEN, ticket_type=TicketType.ISSUE)
+    session = next(get_sync_session_())
+    session.add(ticket)
+    session.commit()
+    session.refresh(ticket)
+    session.close()
+    return ticket, test_user
