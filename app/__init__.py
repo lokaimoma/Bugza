@@ -15,5 +15,7 @@ def create_app() -> FastAPI:
         return __app
     __app = FastAPI(title="Bugza", description="Backend System of Bugza - A bug tracking system")
     from app.api.router.auth import router as auth_router
+    from app.api.router.ticket import router as ticket_router
     __app.include_router(auth_router)
+    __app.include_router(ticket_router)
     return __app
