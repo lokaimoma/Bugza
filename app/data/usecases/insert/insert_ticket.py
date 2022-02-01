@@ -2,13 +2,14 @@
 from sqlalchemy.orm import Session
 
 from app.data.entities.ticket import Ticket
+from app.data.enum.ticket_state import TicketState
 
 from app.data.schema.pydantic.ticket import TicketIn
 
 
 def insert_ticket(session: Session, ticket: TicketIn) -> Ticket:
     ticket = Ticket(project_id=ticket.project_id, creator_id=ticket.creator_id, title=ticket.title,
-                    description=ticket.description, ticket_state=ticket.state, ticket_type=ticket.type)
+                    description=ticket.description, ticket_state=TicketState.OPEN, ticket_type=ticket.type)
     session.add(ticket)
     session.commit()
     session.refresh(ticket)

@@ -11,7 +11,6 @@ class TicketIn(BaseModel):
     title: str
     description: str
     type: TicketType
-    state: TicketState
 
     class Config:
         orm_mode = True
@@ -19,4 +18,5 @@ class TicketIn(BaseModel):
 
 class TicketOut(TicketIn):
     id: int
+    state: TicketState
 
