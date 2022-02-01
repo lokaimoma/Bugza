@@ -4,6 +4,7 @@ import asyncio
 import pytest
 from httpx import AsyncClient
 
+from app.data.entities.project import Project
 from app.data.entities.user import User
 from app.data.enum.roles import Role
 from app.data.schema.pydantic.user import UserOut
@@ -53,3 +54,14 @@ def admin_user() -> UserOut:
     user_out = UserOut(username=user.username, role=user.role, email=user.email, id=user.id,
                        token=token, token_type="Bearer")
     return user_out
+
+
+@pytest.fixture
+def project() -> Project:
+    project = Project(name="CTOS", description="Sorry you don't like Watch Dogs. Can't describe it.")
+    session = next(get_sync_session_())
+    session.add(project)
+    session.commit()
+    session.refresh(project)
+    session.close()
+    return project
