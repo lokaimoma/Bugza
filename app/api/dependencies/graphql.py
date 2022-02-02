@@ -6,9 +6,9 @@ from app.data import get_async_session_unmanaged, get_sync_session_unmanaged
 
 
 class SQLAlchemySessionExtension(Extension):
-    def on_request_start(self):
+    async def on_request_start(self):
         self.execution_context.context[DB_SESSION_SYNC] = get_sync_session_unmanaged()
-        self.execution_context.context[DB_SESSION_ASYNC] = get_async_session_unmanaged()
+        self.execution_context.context[DB_SESSION_ASYNC] = await get_async_session_unmanaged()
 
     async def on_request_end(self):
         self.execution_context.context[DB_SESSION_SYNC].close()

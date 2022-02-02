@@ -84,7 +84,7 @@ async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
         await session.close()
 
 
-def get_async_session_unmanaged() -> AsyncSession:
+async def get_async_session_unmanaged() -> AsyncSession:
     """
         Returns am asynchronous SQLAlchemy session. Users
         of this function have to close the session manually.
