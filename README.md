@@ -1,1 +1,1 @@
-[!Bugza Logo](./resources/images/logo.png)
+[!Bugza Logo](resources/images/logo.png)
