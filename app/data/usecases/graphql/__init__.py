@@ -30,7 +30,7 @@ async def get_tickets_resolver(info: Info, page_number: Optional[int] = 1) -> Li
     return [Ticket(ticket=ticket) for ticket in tickets]
 
 
-async def get_ticket_by_id_resolver(info: Info, ticket_id) -> Optional[Ticket]:
+async def get_ticket_by_id_resolver(info: Info, ticket_id: int) -> Optional[Ticket]:
     ticket = await get_ticket_by_id(session=info.context[DB_SESSION_ASYNC], ticket_id=ticket_id)
     if ticket is None:
         return None
