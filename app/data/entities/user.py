@@ -15,7 +15,7 @@ class User(SQLALCHEMY_BASE):
     email: str = sa.Column(sa.String(length=255), nullable=False, unique=True)
     password: str = sa.Column(sa.TEXT, nullable=False)
     role: Role = sa.Column(sa.Enum(Role), default=Role.TESTER)
-    tickets = relationship("Ticket", backref="creator")
+    tickets = relationship("Ticket", back_populates="creator")
 
     def __init__(self, username: str, email: str, password: str, role: Role = Role.TESTER):
         self.username = username

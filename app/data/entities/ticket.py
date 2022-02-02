@@ -21,8 +21,8 @@ class Ticket(SQLALCHEMY_BASE):
     type: TicketType = sa.Column(sa.Enum(TicketType), nullable=False)
     state: TicketState = sa.Column(sa.Enum(TicketState), nullable=False)
     project: Project = relationship("Project", uselist=False)
-    creator: User = relationship("User", uselist=False, backref="tickets")
-    comments = relationship("Comment", backref="ticket")
+    creator: User = relationship("User", uselist=False, back_populates="tickets")
+    comments = relationship("Comment", back_populates="ticket")
 
     def __init__(self, project_id: int, creator_id: int, title: str, description: str, ticket_type: TicketType,
                  ticket_state: TicketState):
