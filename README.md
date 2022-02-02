@@ -1,6 +1,7 @@
 # 🪲 Bugza
 
-Bugza is a bug tracking system. This is a REST API + GraphQL backend implementation of the system.
+Bugza is a bug tracking system. This is a REST API + GraphQL backend implementation of the system. A mobile and web app
+implementation will follow up soon.
 
 # Requirements
 
