@@ -5,7 +5,9 @@ from typing import List, Optional
 from strawberry.types import Info
 
 from app.data.usecases.getters.get_project import get_projects, get_project_by_id
+from app.data.usecases.getters.get_ticket import get_tickets, get_ticket_by_id
 from app.data.schema.gaphql.project import Project
+from app.data.schema.gaphql.ticket import Ticket
 from app.utils.constants import DB_SESSION_ASYNC
 
 
@@ -19,3 +21,8 @@ async def get_project_by_id_resolver(project_id: int, info: Info) -> Optional[Pr
     if project is None:
         return None
     return Project(project=project)
+
+
+async def get_tickets_resolver(info: Info, page_number: Optional[int] = 1) -> List[Ticket]:
+    tickets = await get_tickets(session=info.context[DB_SESSION_ASYNC], page_number=page_number)
+    return [Ticket(ticket=ticket) for ticket in tickets]
