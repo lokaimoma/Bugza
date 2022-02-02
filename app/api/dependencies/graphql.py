@@ -2,7 +2,7 @@
 from strawberry.extensions import Extension
 
 from app.utils.constants import DB_SESSION_ASYNC, DB_SESSION_SYNC
-from app.data import get_async_session_unmanaged,get_sync_session_unmanaged
+from app.data import get_async_session_unmanaged, get_sync_session_unmanaged
 
 
 class SQLAlchemySessionExtension(Extension):
