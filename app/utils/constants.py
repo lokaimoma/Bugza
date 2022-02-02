@@ -7,3 +7,5 @@ DEVELOPMENT_MODE = "development"
 PRODUCTION_MODE = "production"
 TEST_BASE_URL = "http://test"
 ROWS_PER_PAGE = 20
+DB_SESSION_SYNC = "db_session_sync"
+DB_SESSION_ASYNC = "db_session_async"
