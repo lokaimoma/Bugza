@@ -230,3 +230,61 @@ async def test_get_ticket_by_id(ticket_user, graphql_app):
         assert "ticket" in json["data"]
         assert json["data"]["ticket"] is not None
         assert json["data"]["ticket"]["id"] == ticket.id
+
+
+@pytest.mark.anyio
+async def test_get_all_comments_no_comment(ticket_user, graphql_app):
+    async with AsyncClient(app=graphql_app, base_url=TEST_BASE_URL) as ac:
+        ac: AsyncClient
+        query = """
+            query GET_COMMENTS($ticket_id: Int!) {
+                comments(ticketId: $ticket_id) {
+                    id
+                    userId
+                    ticketId
+                    text
+                }
+            }
+        """
+        request_body = {
+            "query": query,
+            "operationName": "GET_COMMENTS",
+            "variables": {"ticket_id": 1}
+        }
+        response = await ac.post(url=TEST_GRAPHQL_PATH, json=request_body)
+        assert response.status_code == HTTP_200_OK
+        json = response.json()
+        assert "data" in json
+        assert "comments" in json["data"]
+        assert len(json["data"]["comments"]) == 0
+
+
+@pytest.mark.anyio
+async def test_get_all_comments_no_comment(comment_ticket_user, graphql_app):
+    comment = comment_ticket_user[0]
+    ticket = comment_ticket_user[1]
+    async with AsyncClient(app=graphql_app, base_url=TEST_BASE_URL) as ac:
+        ac: AsyncClient
+        query = """
+            query GET_COMMENTS($ticket_id: Int!) {
+                comments(ticketId: $ticket_id) {
+                    id
+                    userId
+                    ticketId
+                    text
+                }
+            }
+        """
+        request_body = {
+            "query": query,
+            "operationName": "GET_COMMENTS",
+            "variables": {"ticket_id": ticket.id}
+        }
+        response = await ac.post(url=TEST_GRAPHQL_PATH, json=request_body)
+        assert response.status_code == HTTP_200_OK
+        json = response.json()
+        assert "data" in json
+        assert "comments" in json["data"]
+        assert len(json["data"]["comments"]) == 1
+        assert comment.id == json["data"]["comments"][0]["id"]
+

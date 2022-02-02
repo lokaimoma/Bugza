@@ -6,6 +6,7 @@ import strawberry
 from strawberry.fastapi import GraphQLRouter
 from httpx import AsyncClient
 
+from app.data.entities.comments import Comment
 from app.data.entities.project import Project
 from app.data.entities.ticket import Ticket
 from app.data.entities.user import User
@@ -93,3 +94,16 @@ def ticket_user(project, test_user) -> tuple[Ticket, dict]:
     session.refresh(ticket)
     session.close()
     return ticket, test_user
+
+
+@pytest.fixture()
+def comment_ticket_user(ticket_user) -> tuple[Comment, Ticket, dict]:
+    ticket = ticket_user[0]
+    user = ticket_user[1]
+    comment = Comment(user_id=user["id"], ticket_id=ticket.id, text="Freaking awesome project, delete it")
+    session = next(get_sync_session_())
+    session.add(comment)
+    session.commit()
+    session.refresh(comment)
+    session.close()
+    return comment, ticket, user
