@@ -17,7 +17,9 @@ def create_app() -> FastAPI:
     from app.api.router.auth import router as auth_router
     from app.api.router.project import router as project_router
     from app.api.router.ticket import router as ticket_router
+    from app.api.router.graphql import router as graphql_router
     __app.include_router(auth_router)
     __app.include_router(project_router)
     __app.include_router(ticket_router)
+    __app.include_router(graphql_router)
     return __app
