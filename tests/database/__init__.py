@@ -7,6 +7,7 @@ from sqlalchemy.engine.mock import MockConnection
 from sqlalchemy.ext.asyncio import AsyncConnection, create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker, Session
 from strawberry.extensions import Extension
+from app.utils.constants import DB_SESSION_ASYNC, DB_SESSION_SYNC
 
 TEST_DATABASE_URL_SYNC = "sqlite:///./sql_app.db"
 TEST_DATABASE_URL_ASYNC = "sqlite+aiosqlite:///./sql_app.db"
@@ -49,3 +50,9 @@ async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
 
 def get_async_session_unmanaged() -> AsyncSession:
     return __async_session_maker()
+
+
+class SQLAlchemySessionExtension(Extension):
+    def on_request_end(self):
+        self.execution_context.context[DB_SESSION_ASYNC] = get_async_session_unmanaged()
+        self.execution_context.context[DB_SESSION_SYNC] = get_sync_session_unmanaged()
