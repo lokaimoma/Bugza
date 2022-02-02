@@ -26,3 +26,10 @@ async def get_project_by_id_resolver(project_id: int, info: Info) -> Optional[Pr
 async def get_tickets_resolver(info: Info, page_number: Optional[int] = 1) -> List[Ticket]:
     tickets = await get_tickets(session=info.context[DB_SESSION_ASYNC], page_number=page_number)
     return [Ticket(ticket=ticket) for ticket in tickets]
+
+
+async def get_ticket_by_id_resolver(info: Info, ticket_id) -> Optional[Ticket]:
+    ticket = await get_ticket_by_id(session=info.context[DB_SESSION_ASYNC], ticket_id=ticket_id)
+    if ticket is None:
+        return None
+    return Ticket(ticket=ticket)
