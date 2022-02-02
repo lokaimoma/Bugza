@@ -82,7 +82,7 @@ poetry run pytest
     + Project idea
     + [Use case diagram](https://www.freeprojectz.com/use-case/bug-tracking-system-use-case-diagram)
 
-### License
+# License
 ```
       
 MIT License
