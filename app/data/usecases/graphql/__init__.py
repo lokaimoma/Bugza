@@ -8,8 +8,8 @@ from app.data.usecases.getters.get_project import get_projects, get_project_by_i
 from app.data.usecases.getters.get_ticket import get_tickets, get_ticket_by_id
 from app.data.usecases.getters.get_comment import get_comments_by_ticket_id
 from app.data.schema.gaphql.project import Project
-from app.data.schema.gaphql.ticket import Ticket
 from app.data.schema.gaphql.comment import Comment
+from app.data.schema.gaphql.ticket import Ticket
 from app.utils.constants import DB_SESSION_ASYNC
 
 
