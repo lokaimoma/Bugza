@@ -13,7 +13,7 @@ from app.data.schema.gaphql.ticket import Ticket
 from app.utils.constants import DB_SESSION_ASYNC
 
 
-async def get_projects_resolver(info: Info, page_number: Optional[int] = 1) -> List[Project]:
+async def get_projects_resolver(info: Info, page_number: Optional[int] = 0) -> List[Project]:
     projects = await get_projects(page_number=page_number, session=info.context[DB_SESSION_ASYNC])
     return [Project(project=project) for project in projects]
 
@@ -25,7 +25,7 @@ async def get_project_by_id_resolver(project_id: int, info: Info) -> Optional[Pr
     return Project(project=project)
 
 
-async def get_tickets_resolver(info: Info, page_number: Optional[int] = 1) -> List[Ticket]:
+async def get_tickets_resolver(info: Info, page_number: Optional[int] = 0) -> List[Ticket]:
     tickets = await get_tickets(session=info.context[DB_SESSION_ASYNC], page_number=page_number)
     return [Ticket(ticket=ticket) for ticket in tickets]
 
@@ -37,7 +37,7 @@ async def get_ticket_by_id_resolver(info: Info, ticket_id: int) -> Optional[Tick
     return Ticket(ticket=ticket)
 
 
-async def get_comments_by_ticket_id_resolver(info: Info, ticket_id: int, offset: Optional[int] = 1) -> List[Comment]:
+async def get_comments_by_ticket_id_resolver(info: Info, ticket_id: int, offset: Optional[int] = 0) -> List[Comment]:
     comments = await get_comments_by_ticket_id(session=info.context[DB_SESSION_ASYNC], offset=offset,
                                                ticket_id=ticket_id)
     return [Comment(comment=comment) for comment in comments]
