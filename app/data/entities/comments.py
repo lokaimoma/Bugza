@@ -16,7 +16,7 @@ class Comment(SQLALCHEMY_BASE):
                                nullable=False)
     text: str = sa.Column(sa.TEXT, nullable=False)
     user: User = relationship("User", uselist=False)
-    ticket: Ticket = relationship("Ticket", uselist=False)
+    ticket: Ticket = relationship("Ticket", uselist=False, backref="comments")
 
     def __init__(self, user_id: int, ticket_id: int, text: str):
         self.user_id = user_id

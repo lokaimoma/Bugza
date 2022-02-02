@@ -1,8 +1,11 @@
 # Created by Kelvin_Clark on 1/30/2022, 10:21 PM
+from typing import List
+
 import sqlalchemy as sa
 from sqlalchemy.orm import relationship
 
 from app.data import SQLALCHEMY_BASE
+from app.data.entities.comments import Comment
 from app.data.entities.project import Project
 from app.data.entities.user import User
 from app.data.enum.ticket_type import TicketType
@@ -20,6 +23,7 @@ class Ticket(SQLALCHEMY_BASE):
     state: TicketState = sa.Column(sa.Enum(TicketState), nullable=False)
     project: Project = relationship("Project", uselist=False)
     creator: User = relationship("User", uselist=False, backref="tickets")
+    comments: List[Comment] = relationship("Comment", backref="ticket")
 
     def __init__(self, project_id: int, creator_id: int, title: str, description: str, ticket_type: TicketType,
                  ticket_state: TicketState):
