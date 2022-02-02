@@ -7,4 +7,4 @@ RUN poetry config virtualenvs.create false --local
 RUN poetry install
 COPY . .
 EXPOSE 8000
-CMD ["python3", "./app.py"]
+CMD ["python3", "./main.py"]
