@@ -10,7 +10,6 @@ from sqlalchemy.orm import sessionmaker, Session
 
 from app.utils.constants import *
 
-
 SYNC_DATABASE_URL = os.environ[SYNC_DATABASE_URL_KEY]
 ASYNC_DATABASE_URL = os.environ[ASYNC_DATABASE_URL_KEY]
 
@@ -56,6 +55,21 @@ def get_sync_session() -> Generator[Session, None, None]:
         session.close()
 
 
+def get_sync_session_unmanaged() -> Session:
+    """
+    Returns a synchronous SQLAlchemy session. Users
+    of this function have to close the session manually.
+    :return: Session
+    """
+    global __sync_engine
+    global __sync_session_maker
+    if __sync_engine is None:
+        __create_sync_engine()
+    if __sync_session_maker is None:
+        __sync_session_maker = sessionmaker(bind=__sync_engine, expire_on_commit=False)
+    return __sync_session_maker()
+
+
 async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
     global __async_engine
     global __async_session_maker
@@ -68,3 +82,19 @@ async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
         yield session
     finally:
         await session.close()
+
+
+def get_async_session_unmanaged() -> AsyncSession:
+    """
+        Returns am asynchronous SQLAlchemy session. Users
+        of this function have to close the session manually.
+        Remember to await the call for close on the session.
+        :return: AsyncSession
+        """
+    global __async_engine
+    global __async_session_maker
+    if __async_engine is None:
+        await __create_async_engine()
+    if __async_session_maker is None:
+        __async_session_maker = sessionmaker(bind=__async_engine, class_=AsyncSession, expire_on_commit=False)
+    return __async_session_maker()
