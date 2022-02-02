@@ -2,6 +2,7 @@
 from typing import Generator, AsyncGenerator
 
 import pytest
+import strawberry
 from sqlalchemy import create_engine
 from sqlalchemy.engine.mock import MockConnection
 from sqlalchemy.ext.asyncio import AsyncConnection, create_async_engine, AsyncSession

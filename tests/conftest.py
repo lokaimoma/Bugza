@@ -2,6 +2,8 @@
 import asyncio
 
 import pytest
+import strawberry
+from strawberry.fastapi import GraphQLRouter
 from httpx import AsyncClient
 
 from app.data.entities.project import Project
@@ -10,13 +12,15 @@ from app.data.entities.user import User
 from app.data.enum.roles import Role
 from app.data.enum.ticket_state import TicketState
 from app.data.enum.ticket_type import TicketType
+from app.data.schema.gaphql.query import Query
 from app.data.schema.pydantic.user import UserOut
-from app.utils.constants import TEST_BASE_URL
+from app.utils.constants import TEST_BASE_URL, TEST_GRAPHQL_PATH
 from app.utils.security.jwt import create_access_token
 from tests.database import init_tables
 from app import create_app
 from app.data import get_async_session, get_sync_session
 from tests.database import get_async_session as get_async_session_, get_sync_session as get_sync_session_
+from tests.database import SQLAlchemySessionExtension
 
 
 @pytest.fixture(scope="session")
@@ -32,6 +36,14 @@ def app():
     app = create_app()
     app.dependency_overrides[get_async_session] = get_async_session_
     app.dependency_overrides[get_sync_session] = get_sync_session_
+    yield app
+
+
+@pytest.fixture
+def graphql_app(app):
+    schema = strawberry.Schema(query=Query, extensions=[SQLAlchemySessionExtension])
+    router = GraphQLRouter(schema=schema, path=TEST_GRAPHQL_PATH)
+    app.include_router(router=router)
     yield app
 
 
