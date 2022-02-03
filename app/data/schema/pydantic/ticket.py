@@ -1,4 +1,6 @@
 # Created by Kelvin_Clark on 2/1/2022, 12:28 PM
+from datetime import datetime
+
 from pydantic import BaseModel
 
 from app.data.enum.ticket_state import TicketState
@@ -19,4 +21,5 @@ class TicketIn(BaseModel):
 class TicketOut(TicketIn):
     id: int
     state: TicketState
+    date_created: datetime
 

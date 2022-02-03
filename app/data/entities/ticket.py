@@ -1,5 +1,5 @@
 # Created by Kelvin_Clark on 1/30/2022, 10:21 PM
-from typing import List
+from datetime import datetime
 
 import sqlalchemy as sa
 from sqlalchemy.orm import relationship
@@ -20,6 +20,7 @@ class Ticket(SQLALCHEMY_BASE):
     description: str = sa.Column(sa.TEXT)
     type: TicketType = sa.Column(sa.Enum(TicketType), nullable=False)
     state: TicketState = sa.Column(sa.Enum(TicketState), nullable=False)
+    date_created: datetime = sa.Column(sa.DateTime, default=datetime.now)
     project: Project = relationship("Project", uselist=False)
     creator: User = relationship("User", uselist=False, back_populates="tickets")
     comments = relationship("Comment", back_populates="ticket")
