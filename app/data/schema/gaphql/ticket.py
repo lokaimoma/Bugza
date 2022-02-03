@@ -20,6 +20,7 @@ class Ticket:
     description: str
     type: TicketType
     state: TicketState
+    date_created: str
 
     instance: strawberry.Private[TicketModel]
 
@@ -43,4 +44,5 @@ class Ticket:
         self.description = ticket.description
         self.type = ticket.type
         self.state = ticket.state
+        self.date_created = ticket.date_created.__str__()
         self.instance = ticket
