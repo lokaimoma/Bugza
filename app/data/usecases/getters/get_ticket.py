@@ -18,3 +18,9 @@ async def get_ticket_by_id(session: AsyncSession, ticket_id: int) -> Optional[Ti
     query = select(Ticket).where(Ticket.id == ticket_id)
     result = await session.execute(query)
     return result.scalar_one_or_none()
+
+
+async def get_latest_tickets(session: AsyncSession, count: Optional[int] = 5) -> List[Ticket]:
+    query = select(Ticket).limit(count).order_by(Ticket.id.desc())
+    result = await session.execute(query)
+    return result.scalars().all()
