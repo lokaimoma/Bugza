@@ -56,8 +56,8 @@ poetry install --no-root
       ```
 
 # Web Routes
-
-All routes are available on `/docs` or `/redoc` paths with Swagger or ReDoc.   
+App will be running on `localhost:8000` by default unless changed manually in the main.py file.   
+All routes information are available on `/docs` or `/redoc` paths with Swagger or ReDoc.   
 To access **graphiql** or make **graphql** requests use the route `/graphql`
 
 # Run tests
