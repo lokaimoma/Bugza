@@ -79,7 +79,6 @@ poetry run pytest
 # Credits
 
 + [Free Projectz](https://www.freeprojectz.com/)
-    + Project idea
     + [Use case diagram](https://www.freeprojectz.com/use-case/bug-tracking-system-use-case-diagram)
 
 # License
