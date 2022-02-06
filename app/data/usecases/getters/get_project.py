@@ -20,7 +20,7 @@ async def get_project_by_id(session: AsyncSession, project_id: int) -> Optional[
     return result.scalar_one_or_none()
 
 
-async def get_latest_projects(session: AsyncSession, count: int = 5) -> List[Project]:
+async def get_latest_projects(session: AsyncSession, count: Optional[int] = 5) -> List[Project]:
     query = select(Project).limit(count).order_by(Project.id.desc())
     result = await session.execute(query)
     return result.scalars().all()
