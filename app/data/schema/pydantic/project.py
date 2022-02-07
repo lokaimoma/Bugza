@@ -12,3 +12,9 @@ class ProjectIn(BaseModel):
 
 class ProjectOut(ProjectIn):
     id: int
+
+
+class ProjectSummary(BaseModel):
+    total_projects: int = 0
+    with_issues: int = 0
+    without_issues: int = 0
