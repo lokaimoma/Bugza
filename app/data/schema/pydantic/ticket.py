@@ -23,3 +23,12 @@ class TicketOut(TicketIn):
     state: TicketState
     date_created: datetime
 
+
+class TicketSummary(BaseModel):
+    total_tickets: int = 0
+    closed: int = 0
+    open: int = 0
+    feature_request: int = 0
+    issues: int = 0
+
+
