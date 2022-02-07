@@ -1,7 +1,7 @@
 # 🪲 Bugza
 
-Bugza is an issue tracking system. This is a REST API + GraphQL backend implementation of the system. A mobile and web app
-implementation will follow up soon.
+Bugza is an issue tracking system. This is a REST API + GraphQL backend implementation of the system. A mobile and web
+app implementation will follow up soon.
 
 ![Work FLow](https://github.com/lokaimoma/BUGZA/actions/workflows/run_tests.yml/badge.svg)
 
@@ -56,9 +56,25 @@ poetry install --no-root
       ```
 
 # Web Routes
+
 App will be running on `localhost:8000` by default unless changed manually in the main.py file.   
 All routes information are available on `/docs` or `/redoc` paths with Swagger or ReDoc.   
 To access **graphiql** or make **graphql** requests use the route `/graphql`
+
+# CORS
+
+To enable CORS for your application :
+
++ Open `./app/__init__.py`
++ On line 12, add your URL to the origins list
+
+```python
+origins = [
+    "http://localhost:3000",
+]
+```
+
++ And reload the app (Bugza)
 
 # Run tests
 
@@ -82,6 +98,7 @@ poetry run pytest
     + [Use case diagram](https://www.freeprojectz.com/use-case/bug-tracking-system-use-case-diagram)
 
 # License
+
 ```
       
 MIT License
