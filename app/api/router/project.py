@@ -8,9 +8,9 @@ from starlette.status import HTTP_201_CREATED
 
 from app.api.dependencies.oauth import get_admin_system_user, get_current_user
 from app.data import get_sync_session, get_async_session
-from app.data.schema.pydantic.project import ProjectOut, ProjectIn
+from app.data.schema.pydantic.project import ProjectOut, ProjectIn, ProjectSummary
 from app.data.schema.pydantic.user import UserOut
-from app.data.usecases.getters.get_project import get_latest_projects
+from app.data.usecases.getters.get_project import get_latest_projects, get_projects_summary
 from app.data.usecases.insert.insert_project import insert_project
 
 router = APIRouter(prefix="/project", tags=["Projects"])
@@ -28,3 +28,10 @@ async def _get_latest_projects(count: Optional[int] = None, _: UserOut = Depends
                                session: AsyncSession = Depends(get_async_session)):
     projects = await get_latest_projects(session=session, count=count)
     return projects
+
+
+@router.get("/summary", response_model=ProjectSummary)
+async def _get_project_summary(_: UserOut = Depends(get_current_user),
+                               session: AsyncSession = Depends(get_async_session)):
+    summary = await get_projects_summary(session=session)
+    return summary
