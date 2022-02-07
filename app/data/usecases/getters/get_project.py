@@ -35,9 +35,6 @@ async def get_projects_summary(session: AsyncSession) -> ProjectSummary:
     query = select(func.count(Project.id)).where(Ticket.project_id == Project.id)
     with_issues = await session.execute(query)
     with_issues = with_issues.scalar_one()
-    query = select(func.count(Project.id)).where(Ticket.project_id != Project.id)
-    without_issues = await session.execute(query)
-    without_issues = without_issues.scalar_one()
     return ProjectSummary(total_projects=project_count,
                           with_issues=with_issues,
-                          without_issues=without_issues)
+                          without_issues=project_count - with_issues)
