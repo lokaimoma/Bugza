@@ -8,7 +8,7 @@ from app.data.entities.project import Project
 from app.data.entities.ticket import Ticket
 from app.data.enum.ticket_state import TicketState
 from app.data.enum.ticket_type import TicketType
-from app.data.schema.pydantic.project import ProjectSummary, ProjectInfo
+from app.data.schema.pydantic.project import ProjectSummary, ProjectStat
 from app.utils.constants import ROWS_PER_PAGE
 
 
@@ -42,7 +42,7 @@ async def get_projects_summary(session: AsyncSession) -> ProjectSummary:
                           without_issues=project_count - with_issues)
 
 
-async def get_project_info(session: AsyncSession, project_id: int) -> ProjectInfo:
+async def get_project_stats(session: AsyncSession, project_id: int) -> ProjectStat:
     query = select(func.count(Ticket.id)).where(
         and_(Ticket.project_id == project_id, Ticket.state == TicketState.OPEN, TicketType.ISSUE))
     open_issues = await session.execute(query)
@@ -55,7 +55,7 @@ async def get_project_info(session: AsyncSession, project_id: int) -> ProjectInf
         and_(Ticket.project_id == project_id, Ticket.state == TicketState.CLOSED))
     closed_tickets = await session.execute(query)
     closed_tickets = closed_tickets.scalar_one()
-    return ProjectInfo(
+    return ProjectStat(
         open_issues=open_issues,
         open_feature_requests=open_feature_requests,
         closed_tickets=closed_tickets
