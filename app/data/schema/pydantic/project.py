@@ -14,6 +14,12 @@ class ProjectOut(ProjectIn):
     id: int
 
 
+class ProjectInfo(BaseModel):
+    open_issues: int = 0
+    open_feature_requests: int = 0
+    closed_tickets: int = 0
+
+
 class ProjectSummary(BaseModel):
     total_projects: int = 0
     with_issues: int = 0
