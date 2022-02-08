@@ -25,7 +25,8 @@ async def create_project(project: ProjectIn, session: Session = Depends(get_sync
 
 
 @router.get("/", response_model=List[ProjectOut])
-async def get_projects__(page_number: Optional[int] = 0, session: AsyncSession = Depends(get_async_session)):
+async def get_projects__(page_number: Optional[int] = 0, session: AsyncSession = Depends(get_async_session),
+                         _: UserOut = Depends(get_current_user)):
     projects = await get_projects(session=session, page_number=page_number)
     return projects
 
@@ -38,7 +39,8 @@ async def _get_latest_projects(count: Optional[int] = None, _: UserOut = Depends
 
 
 @router.get("/stats", response_model=ProjectStat)
-async def _get_project_stat(project_id: int, session: AsyncSession = Depends(get_async_session)):
+async def _get_project_stat(project_id: int, session: AsyncSession = Depends(get_async_session),
+                            _: UserOut = Depends(get_current_user)):
     project_stat = await get_project_stats(session=session, project_id=project_id)
     return project_stat
 
