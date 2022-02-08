@@ -44,11 +44,12 @@ async def get_projects_summary(session: AsyncSession) -> ProjectSummary:
 
 async def get_project_stats(session: AsyncSession, project_id: int) -> ProjectStat:
     query = select(func.count(Ticket.id)).where(
-        and_(Ticket.project_id == project_id, Ticket.state == TicketState.OPEN, TicketType.ISSUE))
+        and_(Ticket.project_id == project_id, Ticket.state == TicketState.OPEN, Ticket.type == TicketType.ISSUE))
     open_issues = await session.execute(query)
     open_issues = open_issues.scalar_one()
     query = select(func.count(Ticket.id)).where(
-        and_(Ticket.project_id == project_id, Ticket.state == TicketState.OPEN, TicketType.FEATURE_REQUEST))
+        and_(Ticket.project_id == project_id, Ticket.state == TicketState.OPEN,
+             Ticket.type == TicketType.FEATURE_REQUEST))
     open_feature_requests = await session.execute(query)
     open_feature_requests = open_feature_requests.scalar_one()
     query = select(func.count(Ticket.id)).where(
