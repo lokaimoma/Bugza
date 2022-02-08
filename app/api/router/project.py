@@ -10,7 +10,7 @@ from app.api.dependencies.oauth import get_admin_system_user, get_current_user
 from app.data import get_sync_session, get_async_session
 from app.data.schema.pydantic.project import ProjectOut, ProjectIn, ProjectSummary
 from app.data.schema.pydantic.user import UserOut
-from app.data.usecases.getters.get_project import get_latest_projects, get_projects_summary
+from app.data.usecases.getters.get_project import get_latest_projects, get_projects_summary, get_projects
 from app.data.usecases.insert.insert_project import insert_project
 
 router = APIRouter(prefix="/project", tags=["Projects"])
@@ -21,6 +21,12 @@ async def create_project(project: ProjectIn, session: Session = Depends(get_sync
                          _: UserOut = Depends(get_admin_system_user)):
     project = insert_project(session=session, project=project)
     return project
+
+
+@router.get("/", response_model=List[ProjectOut])
+async def get_projects__(page_number: Optional[int] = 0, session: AsyncSession = Depends(get_async_session)):
+    projects = await get_projects(session=session, page_number=page_number)
+    return projects
 
 
 @router.get("/latest", response_model=List[ProjectOut])

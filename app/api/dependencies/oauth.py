@@ -21,19 +21,16 @@ def get_current_user(token: str = Depends(oauth2_schema), session: Session = Dep
         detail="Could not validate credentials",
         headers={"WWW-Authenticate": "Bearer"},
     )
-    try:
-        token_data: Union[dict, bool] = get_token_data(token=token)
-        if not token_data:
-            raise credentials_exception
-        user = get_user_by_username_id(session=session, username=token_data["username"], user_id=token_data["user_id"])
-        if not user:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="User no found"
-            )
-        return user
-    except ValueError:
+    token_data: Union[dict, bool] = get_token_data(token=token)
+    if not token_data:
         raise credentials_exception
+    user = get_user_by_username_id(session=session, username=token_data["username"], user_id=token_data["user_id"])
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="User no found"
+        )
+    return user
 
 
 def get_admin_system_user(current_user: UserOut = Depends(get_current_user)) -> UserOut:

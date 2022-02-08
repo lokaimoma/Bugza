@@ -29,7 +29,8 @@ def get_token_data(token: str) -> Union[dict, bool]:
     """
     try:
         return jwt.decode(token=token, key=SECRET_KEY, algorithms=[ALGORITHM])
-    except JWTError:
+    except JWTError as e:
+        print(e)
         return False
 
 
