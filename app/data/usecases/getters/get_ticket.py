@@ -11,6 +11,12 @@ from app.data.schema.pydantic.ticket import TicketSummary
 from app.utils.constants import ROWS_PER_PAGE
 
 
+async def get_tickets_by_project_id(session: AsyncSession, project_id: int) -> List[Ticket]:
+    query = select(Ticket).where(Ticket.project_id == project_id)
+    result = await session.execute(query)
+    return result.scalars().all()
+
+
 async def get_tickets(session: AsyncSession, page_number: int) -> List[Ticket]:
     query = select(Ticket).limit(ROWS_PER_PAGE).offset(ROWS_PER_PAGE * page_number)
     result = await session.execute(query)
