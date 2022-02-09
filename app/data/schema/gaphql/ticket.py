@@ -7,8 +7,8 @@ from app.data.enum.ticket_state import TicketState
 from app.data.enum.ticket_type import TicketType
 from app.data.entities.ticket import Ticket as TicketModel
 from app.data.schema.gaphql.comment import Comment
-from app.data.schema.gaphql.project import Project
 from app.data.schema.gaphql.user import User
+from app.data.schema.gaphql.project import Project
 
 
 @strawberry.type

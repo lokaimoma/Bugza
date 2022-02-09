@@ -5,7 +5,7 @@ from typing import List, Optional
 from strawberry.types import Info
 
 from app.data.usecases.getters.get_project import get_projects, get_project_by_id
-from app.data.usecases.getters.get_ticket import get_tickets, get_ticket_by_id
+from app.data.usecases.getters.get_ticket import get_tickets, get_ticket_by_id, get_tickets_by_project_id
 from app.data.usecases.getters.get_comment import get_comments_by_ticket_id
 from app.data.schema.gaphql.project import Project
 from app.data.schema.gaphql.comment import Comment
@@ -41,3 +41,8 @@ async def get_comments_by_ticket_id_resolver(info: Info, ticket_id: int, offset:
     comments = await get_comments_by_ticket_id(session=info.context[DB_SESSION_ASYNC], offset=offset,
                                                ticket_id=ticket_id)
     return [Comment(comment=comment) for comment in comments]
+
+
+async def get_tickets_by_project_id_(info: Info, project_id: int) -> List[Ticket]:
+    tickets = await get_tickets_by_project_id(session=info.context[DB_SESSION_ASYNC], project_id=project_id)
+    return [Ticket(ticket=ticket) for ticket in tickets]
