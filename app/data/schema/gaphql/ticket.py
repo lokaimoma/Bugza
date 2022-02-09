@@ -3,8 +3,6 @@ from typing import List
 
 import strawberry
 
-from app.data.enum.ticket_state import TicketState
-from app.data.enum.ticket_type import TicketType
 from app.data.entities.ticket import Ticket as TicketModel
 from app.data.schema.gaphql.comment import Comment
 from app.data.schema.gaphql.user import User
@@ -18,8 +16,8 @@ class Ticket:
     creator_id: int
     title: str
     description: str
-    type: TicketType
-    state: TicketState
+    type: str
+    state: str
     date_created: str
 
     instance: strawberry.Private[TicketModel]
@@ -42,7 +40,7 @@ class Ticket:
         self.creator_id = ticket.creator_id
         self.title = ticket.title
         self.description = ticket.description
-        self.type = ticket.type
-        self.state = ticket.state
+        self.type = ticket.type.value
+        self.state = ticket.state.value
         self.date_created = ticket.date_created.__str__()
         self.instance = ticket
