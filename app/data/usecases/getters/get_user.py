@@ -19,3 +19,7 @@ def get_user_by_username_password(session: Session, username: str, password: str
     if verify_password_hash(password=password, password_hash=user.password):
         return user
     return None
+
+
+def get_user_by_id(session: Session, user_id: int) -> Optional[User]:
+    return session.query(User).where(User.id == user_id).first()
