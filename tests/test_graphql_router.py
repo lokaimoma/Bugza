@@ -375,9 +375,8 @@ async def test_get_all_comments_creator(comment_ticket_user, graphql_app):
         response = await ac.post(url=TEST_GRAPHQL_PATH, json=request_body)
         assert response.status_code == HTTP_200_OK
         json = response.json()
-        print(json)
         assert "data" in json
         assert "comments" in json["data"]
-        assert json["data"]["comments"][0]["user"] is not None
-        assert "username" in json["data"]["comments"][0]["user"]
-        assert "role" in json["data"]["comments"][0]["user"]
+        assert json["data"]["comments"][0]["creator"] is not None
+        assert "username" in json["data"]["comments"][0]["creator"]
+        assert "role" in json["data"]["comments"][0]["creator"]
