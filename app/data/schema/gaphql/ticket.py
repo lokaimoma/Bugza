@@ -22,6 +22,8 @@ class Ticket:
     state: str
     date_created: str
 
+    instance: strawberry.Private[TicketModel]
+
     @strawberry.field
     def creator(self, info: Info) -> Optional[User]:
         user = get_user_by_id(session=info.context[DB_SESSION_SYNC], user_id=self.creator_id)
@@ -42,3 +44,4 @@ class Ticket:
         self.type = ticket.type.value
         self.state = ticket.state.value
         self.date_created = ticket.date_created.__str__()
+        self.instance = ticket
