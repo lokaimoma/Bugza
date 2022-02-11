@@ -1,7 +1,7 @@
 # Created by Kelvin_Clark on 2/1/2022, 12:50 PM
 import pytest
 from httpx import AsyncClient
-from starlette.status import HTTP_201_CREATED, HTTP_401_UNAUTHORIZED
+from starlette.status import HTTP_201_CREATED, HTTP_401_UNAUTHORIZED, HTTP_200_OK
 
 from app.data.enum.ticket_state import TicketState
 from app.data.enum.ticket_type import TicketType
@@ -63,3 +63,33 @@ async def test_insert_comment(ticket_user, app):
         response = await ac.post(url="/ticket/comment", json=comment)
         assert response.status_code == HTTP_201_CREATED
         assert "id" in response.json()
+
+
+@pytest.mark.anyio
+async def test_get_latest_tickets(ticket_user, app):
+    ticket = ticket_user[0]
+    user = ticket_user[1]
+    async with AsyncClient(app=app, base_url=TEST_BASE_URL) as ac:
+        ac: AsyncClient
+        ac.headers.update({"Authorization": f"Bearer {user['token']}"})
+        response = await ac.get(url="/ticket/latest")
+        json = response.json()
+        assert response.status_code == HTTP_200_OK
+        assert len(json) <= 10
+        assert json[0]["id"] == ticket.id
+
+
+@pytest.mark.anyio
+async def test_get_tickets_summary(ticket_user, app):
+    ticket = ticket_user[0]
+    user = ticket_user[1]
+    async with AsyncClient(app=app, base_url=TEST_BASE_URL) as ac:
+        ac: AsyncClient
+        ac.headers.update({"Authorization": f"Bearer {user['token']}"})
+        response = await ac.get(url="/ticket/summary")
+        json = response.json()
+        assert json["total_tickets"] == 1
+        assert json["closed"] == 0
+        assert json["open"] == 1
+        assert "open_feature_request" in json
+        assert "open_issues" in json
