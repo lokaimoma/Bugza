@@ -233,6 +233,67 @@ async def test_get_ticket_by_id(ticket_user, graphql_app):
 
 
 @pytest.mark.anyio
+async def test_get_ticket_by_id_creator(ticket_user, graphql_app):
+    ticket = ticket_user[0]
+    async with AsyncClient(app=graphql_app, base_url=TEST_BASE_URL) as ac:
+        ac: AsyncClient
+        query = """
+            query GET_TICKET($ticket_id: Int!) {
+                ticket(ticketId: $ticket_id) {
+                    creator {
+                        username
+                        email
+                        role
+                    }
+                }
+            }
+        """
+        request_body = {
+            "query": query,
+            "operationName": "GET_TICKET",
+            "variables": {"ticket_id": ticket.id}
+        }
+        response = await ac.post(url=TEST_GRAPHQL_PATH, json=request_body)
+        assert response.status_code == HTTP_200_OK
+        json = response.json()
+        assert json["data"] is not None
+        assert "ticket" in json["data"]
+        assert json["data"]["ticket"]["creator"] is not None
+        assert "username" in json["data"]["ticket"]["creator"]
+
+
+@pytest.mark.anyio
+async def test_get_ticket_by_id_project(ticket_user, graphql_app):
+    ticket = ticket_user[0]
+    async with AsyncClient(app=graphql_app, base_url=TEST_BASE_URL) as ac:
+        ac: AsyncClient
+        query = """
+            query GET_TICKET($ticket_id: Int!) {
+                ticket(ticketId: $ticket_id) {
+                    project {
+                        id
+                        name
+                        description
+                    }
+                }
+            }
+        """
+        request_body = {
+            "query": query,
+            "operationName": "GET_TICKET",
+            "variables": {"ticket_id": ticket.id}
+        }
+        response = await ac.post(url=TEST_GRAPHQL_PATH, json=request_body)
+        assert response.status_code == HTTP_200_OK
+        json = response.json()
+        assert json["data"] is not None
+        assert "ticket" in json["data"]
+        assert json["data"]["ticket"]["project"] is not None
+        assert "name" in json["data"]["ticket"]["project"]
+        assert "description" in json["data"]["ticket"]["project"]
+
+
+@pytest.mark.anyio
 async def test_get_all_comments_no_comment(ticket_user, graphql_app):
     async with AsyncClient(app=graphql_app, base_url=TEST_BASE_URL) as ac:
         ac: AsyncClient
@@ -260,7 +321,7 @@ async def test_get_all_comments_no_comment(ticket_user, graphql_app):
 
 
 @pytest.mark.anyio
-async def test_get_all_comments_no_comment(comment_ticket_user, graphql_app):
+async def test_get_all_comments(comment_ticket_user, graphql_app):
     comment = comment_ticket_user[0]
     ticket = comment_ticket_user[1]
     async with AsyncClient(app=graphql_app, base_url=TEST_BASE_URL) as ac:
@@ -288,3 +349,35 @@ async def test_get_all_comments_no_comment(comment_ticket_user, graphql_app):
         assert len(json["data"]["comments"]) == 1
         assert comment.id == json["data"]["comments"][0]["id"]
 
+
+@pytest.mark.anyio
+async def test_get_all_comments_creator(comment_ticket_user, graphql_app):
+    ticket = comment_ticket_user[1]
+    async with AsyncClient(app=graphql_app, base_url=TEST_BASE_URL) as ac:
+        ac: AsyncClient
+        query = """
+            query GET_COMMENTS($ticket_id: Int!) {
+                comments(ticketId: $ticket_id) {
+                    creator {
+                        id
+                        username
+                        email
+                        role
+                    }
+                }
+            }
+        """
+        request_body = {
+            "query": query,
+            "operationName": "GET_COMMENTS",
+            "variables": {"ticket_id": ticket.id}
+        }
+        response = await ac.post(url=TEST_GRAPHQL_PATH, json=request_body)
+        assert response.status_code == HTTP_200_OK
+        json = response.json()
+        print(json)
+        assert "data" in json
+        assert "comments" in json["data"]
+        assert json["data"]["comments"][0]["user"] is not None
+        assert "username" in json["data"]["comments"][0]["user"]
+        assert "role" in json["data"]["comments"][0]["user"]
