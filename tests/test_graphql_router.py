@@ -378,5 +378,7 @@ async def test_get_all_comments_creator(comment_ticket_user, graphql_app):
         assert "data" in json
         assert "comments" in json["data"]
         assert json["data"]["comments"][0]["creator"] is not None
+        assert "creator" in json["data"]["comments"][0]
+        assert json["data"]["comments"][0]["creator"] is not None
         assert "username" in json["data"]["comments"][0]["creator"]
         assert "role" in json["data"]["comments"][0]["creator"]

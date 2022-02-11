@@ -1,7 +1,8 @@
 # Created by Kelvin_Clark on 1/31/2022, 6:04 PM
 import pytest
 from httpx import AsyncClient
-from starlette.status import HTTP_401_UNAUTHORIZED, HTTP_201_CREATED, HTTP_200_OK, HTTP_400_BAD_REQUEST
+from starlette.status import HTTP_401_UNAUTHORIZED, HTTP_201_CREATED, HTTP_200_OK, HTTP_400_BAD_REQUEST, \
+    HTTP_422_UNPROCESSABLE_ENTITY
 
 from app.utils.constants import TEST_BASE_URL
 
@@ -51,3 +52,32 @@ async def test_user_register_duplicate(test_user, app):
         form_data = {"username": "BetaTester", "password": "synergy", "email": "hello@hello.com"}
         response = await ac.post(url="/auth/signUp", data=form_data)
         assert response.status_code == HTTP_400_BAD_REQUEST
+
+
+@pytest.mark.anyio
+async def test_user_login_wrong_oauth_form(test_user, app):
+    async with AsyncClient(app=app, base_url=TEST_BASE_URL) as ac:
+        ac: AsyncClient
+        form_data = {"email": test_user["email"], "password": "thereIsFireOnTheMountain"}
+        response = await ac.post(url="/auth/signUp", data=form_data)
+        assert response.status_code == HTTP_422_UNPROCESSABLE_ENTITY
+
+
+@pytest.mark.anyio
+async def test_user_login_wrong_cred(test_user, app):
+    async with AsyncClient(app=app, base_url=TEST_BASE_URL) as ac:
+        ac: AsyncClient
+        form_data = {"username": test_user["username"], "password": "synergy123"}
+        response = await ac.post(url="/auth/login", data=form_data)
+        assert response.status_code == HTTP_401_UNAUTHORIZED
+
+
+@pytest.mark.anyio
+async def test_user_login_correct_cred(test_user, app):
+    async with AsyncClient(app=app, base_url=TEST_BASE_URL) as ac:
+        ac: AsyncClient
+        form_data = {"username": test_user["username"], "password": "synergy"}
+        response = await ac.post(url="/auth/login", data=form_data)
+        assert response.status_code == HTTP_200_OK
+        assert response.json()["username"] == test_user["username"]
+        assert "password" not in response.json()
