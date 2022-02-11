@@ -171,6 +171,39 @@ async def test_get_all_tickets(ticket_user, graphql_app):
 
 
 @pytest.mark.anyio
+async def test_tickets_by_project_id(ticket_user, graphql_app):
+    ticket = ticket_user[0]
+    async with AsyncClient(app=graphql_app, base_url=TEST_BASE_URL) as ac:
+        ac: AsyncClient
+        query = """
+            query GET_TICKETS_BY_PROJECT_ID($projectId: Int!) {
+                ticketsByProjectId(projectId: $projectId) {
+                    id
+                    projectId
+                    creatorId
+                    title
+                    description
+                    type
+                    state
+                }
+            }
+        """
+        request_body = {
+            "query": query,
+            "operationName": "GET_TICKETS_BY_PROJECT_ID",
+            "variables": {"projectId": ticket.project_id}
+        }
+        response = await ac.post(url=TEST_GRAPHQL_PATH, json=request_body)
+        assert response.status_code == HTTP_200_OK
+        json = response.json()
+        assert "data" in json
+        assert "ticketsByProjectId" in json["data"]
+        assert len(json["data"]["ticketsByProjectId"]) == 1
+        assert json["data"]["ticketsByProjectId"][0]["id"] == ticket.id
+        assert json["data"]["ticketsByProjectId"][0]["projectId"] == ticket.project_id
+
+
+@pytest.mark.anyio
 async def test_get_ticket_by_id_no_ticket(graphql_app):
     async with AsyncClient(app=graphql_app, base_url=TEST_BASE_URL) as ac:
         ac: AsyncClient
