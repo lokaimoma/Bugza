@@ -1,7 +1,7 @@
 # Created by Kelvin_Clark on 2/2/2022, 2:05 AM
 from typing import List, Optional
 
-from sqlalchemy import select, func, and_
+from sqlalchemy import select, func, and_, distinct
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.data.entities.project import Project
@@ -34,7 +34,8 @@ async def get_projects_summary(session: AsyncSession) -> ProjectSummary:
     query = select(func.count(Project.id))
     project_count = await session.execute(query)
     project_count = project_count.scalar_one()
-    query = select(func.count(Project.id)).where(Ticket.project_id == Project.id)
+    query = select(func.count(distinct(Project.id))).where(
+        and_(Ticket.project_id == Project.id, Ticket.state == TicketState.OPEN))
     with_issues = await session.execute(query)
     with_issues = with_issues.scalar_one()
     return ProjectSummary(total_projects=project_count,
