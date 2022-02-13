@@ -92,3 +92,29 @@ async def test_get_tickets_summary(ticket_user, app):
         assert json["open"] == 1
         assert "open_feature_request" in json
         assert "open_issues" in json
+
+
+@pytest.mark.anyio
+async def test_get_ticket_comments_count_no_comments(ticket_user, app):
+    ticket = ticket_user[0]
+    user = ticket_user[1]
+    async with AsyncClient(app=app, base_url=TEST_BASE_URL) as ac:
+        ac: AsyncClient
+        ac.headers.update({"Authorization": f"Bearer {user['token']}"})
+        response = await ac.get(url=f"/ticket/comment_count?ticket_id={ticket.id}")
+        json = response.json()
+        assert response.status_code == HTTP_200_OK
+        assert json["total"] == 0
+
+
+@pytest.mark.anyio
+async def test_get_ticket_comments_count_no_comments(comment_ticket_user, app):
+    ticket = comment_ticket_user[1]
+    user = comment_ticket_user[2]
+    async with AsyncClient(app=app, base_url=TEST_BASE_URL) as ac:
+        ac: AsyncClient
+        ac.headers.update({"Authorization": f"Bearer {user['token']}"})
+        response = await ac.get(url=f"/ticket/comment_count?ticket_id={ticket.id}")
+        json = response.json()
+        assert response.status_code == HTTP_200_OK
+        assert json["total"] == 1
