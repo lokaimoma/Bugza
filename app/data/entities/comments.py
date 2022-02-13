@@ -1,4 +1,6 @@
 # Created by Kelvin_Clark on 1/30/2022, 10:33 PM
+from datetime import datetime
+
 import sqlalchemy as sa
 from sqlalchemy.orm import relationship
 
@@ -14,6 +16,7 @@ class Comment(SQLALCHEMY_BASE):
     ticket_id: int = sa.Column(sa.BIGINT, sa.ForeignKey("tickets.id", onupdate="CASCADE", ondelete="CASCADE"),
                                nullable=False)
     text: str = sa.Column(sa.TEXT, nullable=False)
+    date_created: datetime = sa.Column(sa.DateTime, default=datetime.now)
     user: User = relationship("User", uselist=False)
     ticket = relationship("Ticket", uselist=False, back_populates="comments")
 
