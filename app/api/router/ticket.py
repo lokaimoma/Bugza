@@ -8,10 +8,11 @@ from starlette.status import HTTP_201_CREATED
 
 from app.api.dependencies.oauth import get_current_user
 from app.data import get_sync_session, get_async_session
-from app.data.schema.pydantic.comment import CommentOut, CommentIn
+from app.data.schema.pydantic.comment import CommentOut, CommentIn, CommentCount
 from app.data.schema.pydantic.ticket import TicketOut, TicketIn, TicketSummary
 from app.data.schema.pydantic.user import UserOut
 from app.data.usecases.getters.get_ticket import get_latest_tickets, get_tickets_summary
+from app.data.usecases.getters.get_comment import get_total_comments_by_ticket_id
 from app.data.usecases.insert.insert_comment import insert_comment
 from app.data.usecases.insert.insert_ticket import insert_ticket
 
@@ -44,3 +45,9 @@ async def _get_tickets_summary(session: AsyncSession = Depends(get_async_session
                                _: UserOut = Depends(get_current_user)):
     summary = await get_tickets_summary(session=session)
     return summary
+
+
+@router.get(path="/comment_count", response_model=CommentCount)
+async def _get_total_comments_count(ticket_id: int, session: AsyncSession = Depends(get_async_session)):
+    comment_count = await get_total_comments_by_ticket_id(session=session, ticket_id=ticket_id)
+    return comment_count

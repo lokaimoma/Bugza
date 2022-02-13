@@ -13,3 +13,7 @@ class CommentIn(BaseModel):
 
 class CommentOut(CommentIn):
     id: int
+
+
+class CommentCount(BaseModel):
+    total: int = 0
