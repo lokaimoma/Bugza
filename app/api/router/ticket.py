@@ -33,7 +33,7 @@ async def create_comment(comment: CommentIn, session: Session = Depends(get_sync
 
 
 @router.get(path="/latest", response_model=List[TicketOut])
-async def _get_latest_tickets(count: Optional[int] = None, session: AsyncSession = Depends(get_async_session),
+async def _get_latest_tickets(count: Optional[int] = 5, session: AsyncSession = Depends(get_async_session),
                               _: UserOut = Depends(get_current_user)):
     tickets = await get_latest_tickets(session=session, count=count)
     return tickets

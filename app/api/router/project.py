@@ -32,7 +32,7 @@ async def get_projects__(page_number: Optional[int] = 0, session: AsyncSession =
 
 
 @router.get("/latest", response_model=List[ProjectOut])
-async def _get_latest_projects(count: Optional[int] = None, _: UserOut = Depends(get_current_user),
+async def _get_latest_projects(count: Optional[int] = 5, _: UserOut = Depends(get_current_user),
                                session: AsyncSession = Depends(get_async_session)):
     projects = await get_latest_projects(session=session, count=count)
     return projects
