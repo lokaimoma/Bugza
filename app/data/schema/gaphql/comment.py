@@ -1,4 +1,5 @@
 # Created by Kelvin_Clark on 2/2/2022, 1:18 AM
+from datetime import datetime
 from typing import Optional
 
 import strawberry
@@ -16,6 +17,7 @@ class Comment:
     user_id: int
     ticket_id: int
     text: str
+    date_created: str
 
     @strawberry.field
     def creator(self, info: Info) -> Optional[User]:
@@ -29,3 +31,4 @@ class Comment:
         self.user_id = comment.user_id
         self.ticket_id = comment.ticket_id
         self.text = comment.text
+        self.date_created = comment.date_created.__str__()

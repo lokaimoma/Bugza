@@ -1,4 +1,6 @@
 # Created by Kelvin_Clark on 2/1/2022, 10:58 PM
+from datetime import datetime
+
 from pydantic import BaseModel
 
 
@@ -13,6 +15,7 @@ class CommentIn(BaseModel):
 
 class CommentOut(CommentIn):
     id: int
+    date_created: datetime
 
 
 class CommentCount(BaseModel):
