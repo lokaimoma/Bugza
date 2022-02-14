@@ -1,7 +1,9 @@
 # Created by Kelvin_Clark on 2/1/2022, 12:24 PM
 from typing import List, Optional
 
+from aioredis import Channel, Redis
 from fastapi import APIRouter, Depends
+from fastapi_plugins import depends_redis, redis_plugin
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Session
 from starlette.status import HTTP_201_CREATED
@@ -28,8 +30,9 @@ async def create_ticket(ticket: TicketIn, _: UserOut = Depends(get_current_user)
 
 @router.post(path="/comment", status_code=HTTP_201_CREATED, response_model=CommentOut)
 async def create_comment(comment: CommentIn, session: Session = Depends(get_sync_session),
-                         _: UserOut = Depends(get_current_user)):
+                         _: UserOut = Depends(get_current_user), redis: Redis = Depends(depends_redis)):
     comment = insert_comment(comment=comment, session=session)
+    await redis.publish(channel=f"comment_{comment.id}_channel", message=CommentOut(**comment.__dict__).dict())
     return comment
 
 
