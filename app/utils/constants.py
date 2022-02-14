@@ -10,3 +10,4 @@ TEST_GRAPHQL_PATH = "/test_graphql"
 ROWS_PER_PAGE = 20
 DB_SESSION_SYNC = "db_session_sync"
 DB_SESSION_ASYNC = "db_session_async"
+COMMENT_ADDED_EVENT = "comment_added_event"

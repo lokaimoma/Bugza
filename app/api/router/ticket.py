@@ -17,6 +17,7 @@ from app.data.usecases.getters.get_ticket import get_latest_tickets, get_tickets
 from app.data.usecases.getters.get_comment import get_total_comments_by_ticket_id
 from app.data.usecases.insert.insert_comment import insert_comment
 from app.data.usecases.insert.insert_ticket import insert_ticket
+from app.utils.constants import COMMENT_ADDED_EVENT
 
 router = APIRouter(prefix="/ticket", tags=["Tickets"])
 
@@ -32,7 +33,8 @@ async def create_ticket(ticket: TicketIn, _: UserOut = Depends(get_current_user)
 async def create_comment(comment: CommentIn, session: Session = Depends(get_sync_session),
                          _: UserOut = Depends(get_current_user), redis: Redis = Depends(depends_redis)):
     comment = insert_comment(comment=comment, session=session)
-    await redis.publish(channel=f"comment_{comment.id}_channel", message=CommentOut(**comment.__dict__).dict())
+    await redis.publish(channel=f"ticket_{comment.ticket_id}_comments_channel",
+                        message=CommentOut(**comment.__dict__).dict())
     return comment
 
 
@@ -54,3 +56,9 @@ async def _get_tickets_summary(session: AsyncSession = Depends(get_async_session
 async def _get_total_comments_count(ticket_id: int, session: AsyncSession = Depends(get_async_session)):
     comment_count = await get_total_comments_by_ticket_id(session=session, ticket_id=ticket_id)
     return comment_count
+
+
+async def subscribe_for_comments(channel: str, redis: Redis):
+    (channel_subscription,) = await redis.subscribe(channel=Channel(channel, False))
+    while await channel_subscription.wait_message():
+        yield {"event": COMMENT_ADDED_EVENT, "data": await channel_subscription.get()}
