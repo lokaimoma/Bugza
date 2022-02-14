@@ -7,6 +7,7 @@ from fastapi_plugins import depends_redis, redis_plugin
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Session
 from starlette.status import HTTP_201_CREATED
+from sse_starlette.sse import EventSourceResponse
 
 from app.api.dependencies.oauth import get_current_user
 from app.data import get_sync_session, get_async_session
@@ -56,6 +57,11 @@ async def _get_tickets_summary(session: AsyncSession = Depends(get_async_session
 async def _get_total_comments_count(ticket_id: int, session: AsyncSession = Depends(get_async_session)):
     comment_count = await get_total_comments_by_ticket_id(session=session, ticket_id=ticket_id)
     return comment_count
+
+
+@router.get(path="/sse/comments_stream")
+async def _get_comments_stream(channel: str, redis: Redis = Depends(depends_redis)):
+    return EventSourceResponse(subscribe_for_comments(channel=channel, redis=redis))
 
 
 async def subscribe_for_comments(channel: str, redis: Redis):
