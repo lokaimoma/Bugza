@@ -9,6 +9,7 @@ load_dotenv()
 
 __app: Optional[FastAPI] = None
 
+
 origins = [
     "http://localhost:3000",
 ]

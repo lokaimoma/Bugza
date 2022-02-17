@@ -1,8 +1,7 @@
 # Created by Kelvin_Clark on 2/1/2022, 12:24 PM
 from typing import List, Optional
 
-from aioredis import Channel, Redis
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, BackgroundTasks
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Session
 from starlette.status import HTTP_201_CREATED
@@ -16,6 +15,7 @@ from app.data.usecases.getters.get_ticket import get_latest_tickets, get_tickets
 from app.data.usecases.getters.get_comment import get_total_comments_by_ticket_id
 from app.data.usecases.insert.insert_comment import insert_comment
 from app.data.usecases.insert.insert_ticket import insert_ticket
+from app.connection_manager import connection_manager
 
 router = APIRouter(prefix="/ticket", tags=["Tickets"])
 
@@ -28,9 +28,12 @@ async def create_ticket(ticket: TicketIn, _: UserOut = Depends(get_current_user)
 
 
 @router.post(path="/comment", status_code=HTTP_201_CREATED, response_model=CommentOut)
-async def create_comment(comment: CommentIn, session: Session = Depends(get_sync_session),
+async def create_comment(comment: CommentIn, background_task: BackgroundTasks,
+                         session: Session = Depends(get_sync_session),
                          _: UserOut = Depends(get_current_user)):
     comment = insert_comment(comment=comment, session=session)
+    background_task.add_task(connection_manager.broadcast_to_channel, f"ticket_{comment.ticket_id}_comments_channel",
+                             CommentOut(**comment.__dict__).dict())
     return comment
 
 
