@@ -2,6 +2,7 @@
 from typing import List
 
 from fastapi import WebSocket
+from starlette.websockets import WebSocketDisconnect
 
 
 class ConnectionManager:
@@ -21,7 +22,10 @@ class ConnectionManager:
 
     async def broadcast_to_channel(self, channel: str, json_data: dict):
         for web_socket in self.active_connections.get(channel, []):
-            await web_socket.send(json_data)
+            try:
+                await web_socket.send(json_data)
+            except WebSocketDisconnect:
+                await self.disconnect(channel=channel, web_socket=web_socket)
 
 
 connection_manager = ConnectionManager()

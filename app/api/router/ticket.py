@@ -61,6 +61,3 @@ async def _get_total_comments_count(ticket_id: int, session: AsyncSession = Depe
 @router.websocket_route(path="/comment/stream")
 async def _ticket_comment_stream(websocket: WebSocket, channel: str):
     await connection_manager.connect(channel=channel, websocket=websocket)
-    while True:
-        if websocket.state == WebSocketState.DISCONNECTED:
-            await connection_manager.disconnect(channel=channel, websocket=websocket)
