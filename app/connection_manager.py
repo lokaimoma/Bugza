@@ -24,7 +24,7 @@ class ConnectionManager:
         for web_socket in self.active_connections.get(channel, []):
             try:
                 await web_socket.send(json_data)
-            except WebSocketDisconnect:
+            except WebSocketDisconnect or RuntimeError:
                 await self.disconnect(channel=channel, web_socket=web_socket)
 
 

@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, BackgroundTasks
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Session
 from starlette.status import HTTP_201_CREATED
-from starlette.websockets import WebSocket, WebSocketState
+from starlette.websockets import WebSocket
 
 from app.api.dependencies.oauth import get_current_user
 from app.data import get_sync_session, get_async_session
