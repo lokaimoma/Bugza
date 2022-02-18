@@ -23,7 +23,7 @@ class ConnectionManager:
     async def broadcast_to_channel(self, channel: str, json_data: dict):
         for web_socket in self.active_connections.get(channel, []):
             try:
-                await web_socket.send(json_data)
+                await web_socket.send_json(data=json_data)
             except (WebSocketDisconnect, RuntimeError):
                 await self.disconnect(channel=channel, web_socket=web_socket)
 
