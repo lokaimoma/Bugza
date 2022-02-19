@@ -5,7 +5,6 @@ from fastapi import APIRouter, Depends, BackgroundTasks
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Session
 from starlette.status import HTTP_201_CREATED
-from starlette.websockets import WebSocket
 
 from app.api.dependencies.oauth import get_current_user
 from app.data import get_sync_session, get_async_session
@@ -34,7 +33,7 @@ async def create_comment(comment: CommentIn, background_task: BackgroundTasks,
                          _: UserOut = Depends(get_current_user)):
     comment = insert_comment(comment=comment, session=session)
     background_task.add_task(connection_manager.broadcast_to_channel, f"ticket_{comment.ticket_id}_comments_channel",
-                             CommentOut(**comment.__dict__).dict())
+                             CommentOut(**comment.__dict__).json())
     return comment
 
 
@@ -56,8 +55,3 @@ async def _get_tickets_summary(session: AsyncSession = Depends(get_async_session
 async def _get_total_comments_count(ticket_id: int, session: AsyncSession = Depends(get_async_session)):
     comment_count = await get_total_comments_by_ticket_id(session=session, ticket_id=ticket_id)
     return comment_count
-
-
-@router.websocket_route(path="/comment/stream")
-async def _ticket_comment_stream(websocket: WebSocket, channel: str):
-    await connection_manager.connect(channel=channel, websocket=websocket)
