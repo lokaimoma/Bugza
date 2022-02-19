@@ -22,7 +22,6 @@ class ConnectionManager:
                 self.active_connections[channel].remove(websocket)
 
     async def broadcast_to_channel(self, channel: str, json_data: dict):
-        print("braodcasting")
         for web_socket in self.active_connections.get(channel, []):
             try:
                 await web_socket.send_json(data=json_data)
