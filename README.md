@@ -52,7 +52,7 @@ poetry install --no-root
       ```
     + Linux & MacOS
       ```commandline
-      poetry run python3 .\main.py
+      poetry run python3 ./main.py
       ```
 
 # Web Routes
