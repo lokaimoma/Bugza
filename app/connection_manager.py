@@ -8,9 +8,6 @@ from starlette.websockets import WebSocketDisconnect
 class ConnectionManager:
     active_connections: dict = {}
 
-    def __init__(self):
-        pass
-
     async def connect(self, channel: str, websocket: WebSocket):
         await websocket.accept()
         self.active_connections[channel] = self.active_connections.get(channel, [])
