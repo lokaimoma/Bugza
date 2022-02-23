@@ -1,6 +1,6 @@
 # 🪲 Bugza
 
-Bugza is an issue tracking system. This is a REST API + GraphQL backend implementation of the system. A mobile and web
+A lite implementation of an issue tracking system. This is a REST API + GraphQL backend implementation of the system. A mobile and web
 app implementation will follow up soon.
 
 ![Work FLow](https://github.com/lokaimoma/BUGZA/actions/workflows/run_tests.yml/badge.svg)
