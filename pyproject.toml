@@ -12,7 +12,7 @@ SQLAlchemy = "^1.4.31"
 strawberry-graphql = {extras = ["fastapi"], version = "^0.95.1"}
 python-dotenv = "^0.19.2"
 alembic = "^1.7.5"
-aiomysql = "^0.0.22"
+aiomysql = "^0.1.0"
 passlib = "^1.7.4"
 python-multipart = "^0.0.5"
 python-jose = {extras = ["cryptography"], version = "^3.3.0"}
